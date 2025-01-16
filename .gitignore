@@ -1,0 +1,4 @@
+ansi_encoder/white/*
+via_json/*
+ansi_encoder/rgb/keymaps/via/keymap.c
+ansi_encoder/rgb/keymaps/via/rules.mk
