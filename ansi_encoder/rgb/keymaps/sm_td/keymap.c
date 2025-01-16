@@ -17,8 +17,7 @@
 #include QMK_KEYBOARD_H
 
 enum custom_keycodes {
-    SMTD_KEYCODES_BEGIN = SAFE_RANGE,
-    CKC_A, // reads as C(ustom) + KC_A, but you may give any name here
+    CKC_A = SAFE_RANGE, // reads as C(ustom) + KC_A, but you may give any name here
     CKC_S,
     CKC_D,
     CKC_F,
@@ -26,48 +25,6 @@ enum custom_keycodes {
     CKC_L,
     CKC_K,
     CKC_J,
-    SMTD_KEYCODES_END,
-};
-#include "sm_td.h"
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (!process_smtd(keycode, record)) {
-        return false;
-    }
-    // your code here
-    return true;
-}
-void on_smtd_action(uint16_t keycode, smtd_action action, uint8_t tap_count) {
-    switch (keycode) {
-        SMTD_MT(CKC_A, KC_A, KC_LEFT_GUI)
-        SMTD_MT(CKC_S, KC_S, KC_LEFT_ALT)
-        SMTD_MT(CKC_D, KC_D, KC_LEFT_CTRL)
-        SMTD_MT(CKC_F, KC_F, KC_LSFT)
-        SMTD_MT(CKC_SCLN, KC_SCLN, KC_LEFT_GUI)
-        SMTD_MT(CKC_L, KC_L, KC_LEFT_ALT)
-        SMTD_MT(CKC_K, KC_K, KC_LEFT_CTRL)
-        SMTD_MT(CKC_J, KC_J, KC_LSFT)
-    }
-}
-
-uint32_t get_smtd_timeout(uint16_t keycode, smtd_timeout timeout) {
-    if (keycode == CKC_A && timeout == SMTD_TIMEOUT_TAP) return 300;
-    if (keycode == CKC_A && timeout == SMTD_TIMEOUT_RELEASE) return 5;
-    if (keycode == CKC_S && timeout == SMTD_TIMEOUT_RELEASE) return 5;
-    if (keycode == CKC_D && timeout == SMTD_TIMEOUT_RELEASE) return 5;
-    if (keycode == CKC_F && timeout == SMTD_TIMEOUT_RELEASE) return 15;
-    if (keycode == CKC_J && timeout == SMTD_TIMEOUT_RELEASE) return 15;
-    if (keycode == CKC_K && timeout == SMTD_TIMEOUT_RELEASE) return 30;
-    if (keycode == CKC_L && timeout == SMTD_TIMEOUT_RELEASE) return 15;
-    if (keycode == CKC_SCLN && timeout == SMTD_TIMEOUT_RELEASE) return 10;
-    return get_smtd_timeout_default(timeout);
-}
-
-enum layers{
-    MAC_BASE,
-    MAC_FN,
-    WIN_BASE,
-    WIN_FN,
 };
 
 // clang-format off
@@ -103,6 +60,52 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,    _______,  RGB_RMOD, RGB_VAD,  RGB_HUD,  RGB_SAD,  RGB_SPD,   _______,  _______,  _______,  _______,  _______,  _______,             _______,            _______,
         _______,    _______,            _______,  _______,  _______,  _______,   BAT_LVL,  BAT_LVL,  NK_TOGG,  _______,  _______,  _______,   _______,  _______,  _______,
         _______,    _______,  _______,            _______,  _______,  _______,             _______,            _______,            _______,             _______,  _______,  _______),
+};
+// clang-format on
+
+#include "sm_td.h"
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (!process_smtd(keycode, record)) {
+        return false;
+    }
+    // your code here
+    return true;
+}
+
+smtd_resolution on_smtd_action(uint16_t keycode, smtd_action action, uint8_t tap_count) {
+    switch (keycode) {
+        SMTD_MT_ON_MKEY(CKC_A, KC_A, KC_LEFT_GUI)
+        SMTD_MT_ON_MKEY(CKC_S, KC_S, KC_LEFT_ALT)
+        SMTD_MT_ON_MKEY(CKC_D, KC_D, KC_LEFT_CTRL)
+        SMTD_MT_ON_MKEY(CKC_F, KC_F, KC_LSFT)
+        SMTD_MT_ON_MKEY(CKC_SCLN, KC_SCLN, KC_LEFT_GUI)
+        SMTD_MT_ON_MKEY(CKC_L, KC_L, KC_LEFT_ALT)
+        SMTD_MT_ON_MKEY(CKC_K, KC_K, KC_LEFT_CTRL)
+        SMTD_MT_ON_MKEY(CKC_J, KC_J, KC_LSFT)
+    }
+
+    return SMTD_RESOLUTION_UNHANDLED;
+}
+
+uint32_t get_smtd_timeout(uint16_t keycode, smtd_timeout timeout) {
+    if (keycode == CKC_A && timeout == SMTD_TIMEOUT_TAP) return 300;
+    if (keycode == CKC_A && timeout == SMTD_TIMEOUT_RELEASE) return 5;
+    if (keycode == CKC_S && timeout == SMTD_TIMEOUT_RELEASE) return 5;
+    if (keycode == CKC_D && timeout == SMTD_TIMEOUT_RELEASE) return 5;
+    if (keycode == CKC_F && timeout == SMTD_TIMEOUT_RELEASE) return 15;
+    if (keycode == CKC_J && timeout == SMTD_TIMEOUT_RELEASE) return 15;
+    if (keycode == CKC_K && timeout == SMTD_TIMEOUT_RELEASE) return 30;
+    if (keycode == CKC_L && timeout == SMTD_TIMEOUT_RELEASE) return 15;
+    if (keycode == CKC_SCLN && timeout == SMTD_TIMEOUT_RELEASE) return 10;
+    return get_smtd_timeout_default(timeout);
+}
+
+enum layers{
+    MAC_BASE,
+    MAC_FN,
+    WIN_BASE,
+    WIN_FN,
 };
 
 #if defined(ENCODER_MAP_ENABLE)
